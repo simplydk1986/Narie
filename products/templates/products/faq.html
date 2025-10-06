@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>FAQ</h1>
+        <p>자주 묻는 질문을 통해 궁금증을 해결하세요.</p>
+    </div>
+</div>
+
+<div class="container content-section py-5 cs-page-container">
+    <div class="cs-tabs mb-5">
+        <ul class="nav nav-pills justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link {% if not active_category %}active{% endif %}" href="{% url 'faq' %}">전체</a>
+            </li>
+            {% for category in categories %}
+            <li class="nav-item">
+                <a class="nav-link {% if active_category == category %}active{% endif %}" href="{% url 'faq' %}?category={{ category.id }}">{{ category.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="accordion" id="faqAccordion">
+        {% for faq in faqs %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ faq.id }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ faq.id }}" aria-expanded="false" aria-controls="collapse{{ faq.id }}">
+                    <span class="faq-category">[{{ faq.category.name }}]</span> {{ faq.question }}
+                </button>
+            </h2>
+            <div id="collapse{{ faq.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ faq.id }}" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {{ faq.answer|linebreaksbr }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">등록된 FAQ가 없습니다.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

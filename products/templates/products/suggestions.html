@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>Product Suggestions</h1>
+        <p>고객님의 목소리로 Sun&Sol은 성장합니다. 소중한 의견을 들려주세요.</p>
+    </div>
+</div>
+
+<div class="container content-section py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="text-center mb-5">제품 개선 제안하기</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="suggestionTitle" class="form-label">제목</label>
+                    <input type="text" class="form-control" id="suggestionTitle" placeholder="제안의 핵심 내용을 적어주세요.">
+                </div>
+                <div class="mb-3">
+                    <label for="suggestionContent" class="form-label">내용</label>
+                    <textarea class="form-control" id="suggestionContent" rows="8" placeholder="어떤 점이 개선되면 좋을지, 혹은 어떤 새로운 제품이 있으면 좋을지 자유롭게 의견을 남겨주세요."></textarea>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-dark">제출하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

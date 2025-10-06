@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Shop Main Section -->
+<section class="container py-5">
+    <div class="shop-header text-center mb-5">
+        <h1 class="shop-title">{{ active_category }}</h1>
+        <nav class="shop-nav">
+            <a href="{% url 'shop' %}" class="shop-nav-link {% if not active_category_obj %}active{% endif %}">All</a>
+            {% for type in product_types %}
+                <a href="{% url 'shop' %}?type={{ type.slug }}" class="shop-nav-link {% if active_category_obj == type %}active{% endif %}">{{ type.name }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+
+    <!-- Controls: Item count and Sorting -->
+    <div class="shop-controls d-flex justify-content-between align-items-center mb-4">
+        <span class="product-count">{{ products|length }} items</span>
+        <div class="sorting-options">
+            <a href="?{{ current_filter_params }}&sort=new" class="sort-link {% if active_sort == 'new' %}active{% endif %}">신상품순</a>
+            <span class="mx-1">|</span>
+            <a href="?{{ current_filter_params }}&sort=price_asc" class="sort-link {% if active_sort == 'price_asc' %}active{% endif %}">낮은 가격순</a>
+            <span class="mx-1">|</span>
+            <a href="?{{ current_filter_params }}&sort=price_desc" class="sort-link {% if active_sort == 'price_desc' %}active{% endif %}">높은 가격순</a>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="product-card-new h-100">
+                <a href="{% url 'product_detail' product.id %}" class="product-image-link">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="https://placehold.co/400x400/f0f0f0/ccc?text=No+Image" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
+                </a>
+                <div class="card-body mt-3">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-price">
+                        {% if product.is_on_sale %}
+                            <span class="text-danger me-2">₩{{ product.sale_price|floatformat:0 }}</span>
+                            <span class="text-muted text-decoration-line-through">₩{{ product.price|floatformat:0 }}</span>
+                        {% else %}
+                            <span>₩{{ product.price|floatformat:0 }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h4 class="text-muted">해당 카테고리의 상품이 없습니다.</h4>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+

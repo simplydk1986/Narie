@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- 1. Video Section -->
+<section class="video-section">
+    <div class="video-container active">
+        <video autoplay muted playsinline>
+            <source src="{% static 'videos/video1.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+    <div class="video-container">
+         <video muted playsinline>
+            <source src="{% static 'videos/video2.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+     <div class="video-container">
+         <video muted playsinline>
+            <source src="{% static 'videos/video3.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+     <div class="video-container">
+         <video muted playsinline>
+            <source src="{% static 'videos/video4.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="video-overlay">
+        <div class="overlay-content" onclick="document.getElementById('featured-products').scrollIntoView({ behavior: 'smooth' });">
+            <h1>Narié</h1>
+            <p>Product of New Zealand</p>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Featured Products Section -->
+<section class="container py-5" id="featured-products">
+    <h2 class="section-title text-center">Featured Products</h2>
+    <div class="row">
+        {% for product in featured_products %}
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="product-card h-100">
+                <a href="{% url 'product_detail' product.pk %}">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                </a>
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-muted">{{ product.category.name }}</p>
+                    {% if product.is_on_sale and product.sale_price %}
+                        <p class="card-price">
+                            <del class="text-secondary me-2">${{ product.price|floatformat:2 }}</del>
+                            <strong>${{ product.sale_price|floatformat:2 }}</strong>
+                        </p>
+                    {% else %}
+                        <p class="card-price"><strong>${{ product.price|floatformat:2 }}</strong></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p class="text-center">추천 제품이 아직 없습니다.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- 3. Reviews Section -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center section-title">From Our Community</h2>
+        <div class="row">
+            {% for review in latest_reviews %}
+            <div class="col-md-4 mb-4">
+                <div class="review-card h-100">
+                    <div class="card-body">
+                        <div class="review-stars mb-2">
+                            {% for i in "x"|ljust:review.rating %}★{% endfor %}
+                        </div>
+                        <p class="card-text">"{{ review.comment }}"</p>
+                        <footer class="blockquote-footer mt-3">{{ review.user.username }}</footer>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">
+                <p class="text-center">아직 작성된 리뷰가 없습니다.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 4. Promotion Section -->
+<section class="promo-section text-center py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="promo-title">The Power of Pure Nature</h2>
+                <p class="promo-text my-4">Rediscover your skin's natural health with Narié's products, crafted from pristine ingredients sourced from New Zealand.</p>
+                <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">Discover Our Story</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Map Section -->
+<section class="container py-5">
+    <h2 class="text-center section-title">Our Flagship Store</h2>
+    <div class="row">
+        <div class="col-md-6 d-flex align-items-center mb-4 mb-md-0">
+            <div>
+                <h4>Narié PopUp Store</h4>
+                <p>
+                    <strong>주소:</strong> 경기도 용인시 수지구 포은대로313번길<br>
+                    <strong>연락처:</strong> 010-4568-4716<br>
+                    <strong>이메일:</strong> contact@sunandsol.com
+                </p>
+                <p>Narié의 모든 제품을 직접 체험하고 구매하실 수 있는 팝업 스토어입니다. <br>
+                   팝업 스토어 장소는 매월 변경됩니다. 공지를 참고해주세요.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3178.230584852024!2d127.1788578156156!3d37.20826997986669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357b58b4a24c1e65%3A0x7c3493b2a3b48f9c!2z6rK96riw64-EIOyaqeyCsOq1rCDsspzsmrgg7KSR67aA64yA66GcIDEyMA!5e0!3m2!1sko!2skr!4v1620386665785!5m2!1sko!2skr" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Video player logic
+        const videoContainers = document.querySelectorAll('.video-section .video-container');
+        const videos = document.querySelectorAll('.video-section .video-container video');
+        let currentVideoIndex = 0;
+
+        function playNextVideo() {
+            videoContainers[currentVideoIndex].classList.remove('active');
+            currentVideoIndex = (currentVideoIndex + 1) % videoContainers.length;
+            const nextVideoContainer = videoContainers[currentVideoIndex];
+            const nextVideo = videos[currentVideoIndex];
+            nextVideoContainer.classList.add('active');
+            const playPromise = nextVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Video play failed:", error);
+                });
+            }
+        }
+
+        videos.forEach(video => {
+            video.addEventListener('ended', playNextVideo, false);
+        });
+
+        if (videos.length > 0) {
+            videos[0].play().catch(error => {
+                console.error("Initial video autoplay failed:", error);
+            });
+        }
+    });
+</script>
+{% endblock %}

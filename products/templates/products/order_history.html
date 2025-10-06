@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}주문 내역 - Sun&Sol{% endblock %}
+
+{% block style %}
+<style>
+    body { background-color: #f9f9f9; }
+    .container { max-width: 900px; margin: 120px auto 50px; padding: 40px; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    .container h1 { font-family: 'Prata', serif; text-align: center; margin-bottom: 30px; }
+    
+    /* ⭐️ a 태그로 감싸기 위해 스타일 살짝 수정 ⭐️ */
+    .order-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: box-shadow 0.3s;
+    }
+    .order-link:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+    .order-item-summary { color: #555; margin-top: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>My Orders</h1>
+    
+    {% for order in orders %}
+        <a href="{% url 'order_detail' order.id %}" class="order-link">
+            <div class="order-header">
+                <div><strong>주문 번호:</strong> #{{ order.id }}</div>
+                <div><strong>주문 날짜:</strong> {{ order.created_at|date:"Y-m-d" }}</div>
+            </div>
+            <div class="order-item-summary">
+                {{ order.items.first.product.name }}
+                {% if order.items.count > 1 %}
+                    외 {{ order.items.count|add:"-1" }}건
+                {% endif %}
+            </div>
+        </a>
+    {% empty %}
+        <p style="text-align: center;">아직 주문 내역이 없습니다.</p>
+    {% endfor %}
+</div>
+{% endblock %}

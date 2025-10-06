@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>Q&A</h1>
+        <p>무엇이든 물어보세요.</p>
+    </div>
+</div>
+
+<div class="container content-section py-5 cs-page-container">
+    <div class="board-controls">
+        <div class="total-count">
+            총 {{ page_obj.paginator.count }}개
+        </div>
+        <form class="board-search" method="get" action="{% url 'qna' %}">
+            <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="q" value="{{ q }}">
+            <button class="btn btn-dark" type="submit">검색</button>
+        </form>
+    </div>
+
+    <table class="cs-table">
+        <colgroup>
+            <col style="width: 10%;">
+            <col style="width: auto;">
+            <col style="width: 15%;">
+            <col style="width: 15%;">
+            <col style="width: 10%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>상태</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for qna in page_obj %}
+            <tr>
+                <td>{{ qna.id }}</td>
+                <td class="board-title">
+                    <a href="{% url 'qna_detail' qna_id=qna.id %}">
+                        {{ qna.title }}
+                        {% if qna.is_private %}
+                        <i class="bi bi-lock-fill text-muted ms-2"></i>
+                        {% endif %}
+                    </a>
+                </td>
+                <td>{{ qna.author.username }}</td>
+                <td>{{ qna.created_at|date:"Y-m-d" }}</td>
+                <td>
+                    {% if qna.status == '답변완료' %}
+                    <span class="badge bg-dark">답변완료</span>
+                    {% else %}
+                    <span class="badge bg-secondary">답변대기</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">등록된 문의가 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end mt-4">
+        <a href="{% url 'qna_write' %}" class="btn btn-dark">1:1 문의하기</a>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="pagination-wrapper">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}{% if q %}&q={{ q }}{% endif %}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+

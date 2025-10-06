@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}로그인 - Sun&Sol{% endblock %}
+
+{% block style %}
+<style>
+    /* ... 스타일 코드는 생략 ... */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Login</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="submit-btn">로그인</button>
+    </form>
+    <div class="sub-link">
+        <p>계정이 없으신가요? <a href="{% url 'signup' %}">가입하기</a></p>
+    </div>
+
+    {# 👇 바로 이 부분이 주석 처리되었습니다. #}
+    {% comment %}
+    <div class="social-login">
+        <a href="{% provider_login_url 'google' %}" class="google-btn">
+            <i class="fa-brands fa-google"></i> 구글로 로그인
+        </a>
+    </div>
+    {% endcomment %}
+
+</div>
+{% endblock %}

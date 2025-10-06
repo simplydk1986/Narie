@@ -1,0 +1,749 @@
+/*
+ * File: style.css
+ * Project: Sun&Sol E-commerce
+ * Description: Main stylesheet for the project renewal.
+ */
+
+/* -------------------
+ * 1. Global & Fonts
+ * ------------------- */
+:root {
+    --font-primary: 'Inter', sans-serif;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6c757d;
+    --color-background: #ffffff;
+    --color-light-gray: #f8f9fa;
+    --color-border: #e9ecef;
+    --header-height: 80px;
+    --header-height-scrolled: 70px;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-top: var(--header-height);
+}
+
+a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+a:hover {
+    color: #000;
+}
+
+/* -------------------
+ * 2. Header & Navigation
+ * ------------------- */
+header {
+    background-color: transparent;
+    transition: background-color 0.4s ease;
+}
+header.scrolled,
+header.dropdown-active {
+    background-color: var(--color-background);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.navbar {
+    height: var(--header-height);
+    transition: height 0.4s ease;
+}
+header.scrolled .navbar,
+header.dropdown-active .navbar {
+    height: var(--header-height-scrolled);
+}
+
+.navbar-brand {
+    font-size: 2.0rem;
+    font-weight: 700;
+}
+
+/* Navbar text color logic */
+header:not(.scrolled):not(.dropdown-active) .navbar-brand,
+header:not(.scrolled):not(.dropdown-active) .nav-link {
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+header.scrolled .navbar-brand,
+header.scrolled .nav-link,
+header.dropdown-active .navbar-brand,
+header.dropdown-active .nav-link {
+    color: var(--color-text);
+}
+
+
+.nav-link {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0.5em;
+    padding: 0.5em 0.7em;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    position: relative; /* For underline pseudo-element */
+}
+
+/* Underline effect for active menu item */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; /* Position under the text */
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: calc(100% - 1.4em); /* Match padding */
+    height: 2px;
+    background-color: var(--color-text);
+    transition: transform 0.3s ease-in-out;
+    transform-origin: center;
+}
+
+header:not(.scrolled):not(.dropdown-active) .nav-link::after {
+    background-color: #fff; /* White underline for transparent header */
+}
+
+.nav-link.active-menu-link::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+
+.navbar .badge {
+    font-size: 0.6rem;
+    transform: translateY(-8px) translateX(-2px);
+}
+.navbar-toggler {
+    border: none;
+}
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+header:not(.scrolled):not(.dropdown-active) .navbar-toggler-icon {
+     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+header.scrolled .navbar-toggler-icon,
+header.dropdown-active .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* --- Full Width Dropdown Panel --- */
+.dropdown-panel {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-background);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-top: 1px solid var(--color-border);
+    padding: 2.5rem 0;
+    
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+header.dropdown-active .dropdown-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0s;
+    pointer-events: auto;
+}
+
+.dropdown-content {
+    display: none; /* JS will change this to 'flex' */
+    justify-content: center; /* Horizontally centers the columns wrapper */
+}
+
+/* This wrapper holds the columns */
+.dropdown-columns-wrapper {
+    display: flex;
+    gap: 5rem;
+    /* position, left, and justify-content properties are removed for pure CSS centering */
+}
+
+
+.dropdown-column {
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* Ensure all columns are left-aligned */
+}
+
+.dropdown-title {
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dropdown-item-custom {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    transition: all 0.2s ease-in-out;
+    background-color: transparent;
+    border-radius: 6px;
+    text-align: left;
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.dropdown-item-custom:hover {
+    color: var(--color-text);
+    background-color: var(--color-light-gray);
+}
+
+
+/* User profile dropdown (standard bootstrap) */
+.dropdown-menu-end {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+.dropdown-menu-end .dropdown-item {
+    font-family: var(--font-primary);
+    padding: 0.5rem 1rem;
+}
+
+
+/* -------------------
+ * 3. Video & Hero Section
+ * ------------------- */
+.video-section {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #000;
+    margin-top: calc(-1 * var(--header-height)); /* Pulls the section up to fill the space from body padding */
+}
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    z-index: 1;
+}
+.video-container.active {
+    opacity: 1;
+}
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    z-index: 2;
+}
+.overlay-content h1 {
+    font-size: 4.5rem;
+    font-weight: 700;
+}
+.overlay-content p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-top: 1rem;
+}
+
+/* -------------------
+ * 4. General Sections & Cards
+ * ------------------- */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    font-family: var(--font-primary);
+}
+.product-card {
+    border: none;
+    background: #fff;
+    overflow: hidden;
+    text-align: center;
+}
+.product-card img {
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+}
+.product-card:hover img {
+    opacity: 0.9;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    font-family: var(--font-primary);
+}
+.card-price {
+    font-size: 1rem;
+    font-weight: 500;
+}
+.review-card {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+.review-stars {
+    color: #ffc107;
+}
+.promo-section {
+    background-color: #111;
+    padding: 6rem 0;
+    color: white;
+}
+.promo-title {
+    font-size: 2.8rem;
+    font-family: var(--font-primary);
+}
+.promo-text {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.8);
+}
+.map-container iframe {
+    width: 100%;
+    height: 450px;
+    border: 0;
+    border-radius: 8px;
+}
+
+/* -------------------
+ * 5. Footer (V3) - Refined Layout
+ * ------------------- */
+.footer-v2 {
+    background-color: #f8f9fa;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+.footer-top-v2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 3rem;
+}
+
+.footer-brand-info {
+    flex: 1 1 300px; /* Grow, shrink, base width */
+    max-width: 350px;
+}
+
+.footer-links-container {
+    display: flex;
+    flex: 2 1 600px; /* Take more space */
+    justify-content: flex-end; /* Align link columns to the right */
+    flex-wrap: wrap;
+    gap: 3rem; /* Gap between link columns */
+}
+
+.footer-col-v2 {
+    min-width: 180px;
+}
+
+.footer-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.footer-v2 .footer-text {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+}
+
+.footer-col-v2.footer-links p.footer-text {
+    margin-bottom: 0;
+}
+
+.footer-v2 .footer-subtitle {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-v2 .footer-links ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.footer-v2 .footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-v2 .footer-link {
+    color: var(--color-text-muted);
+}
+.footer-v2 .footer-link:hover {
+    color: var(--color-text);
+}
+
+.footer-brand-info .social-icons {
+    margin-top: 1.5rem; /* Add space above icons */
+}
+
+/* --- Social Icons --- */
+.social-icons a {
+    color: #6c757d;
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+}
+.social-icons a:last-child {
+    margin-right: 0;
+}
+.social-icons a#instagram-icon:hover { color: #E1306C; }
+.social-icons a#facebook-icon:hover  { color: #1877F2; }
+.social-icons a#tiktok-icon:hover    { color: #000000; }
+.social-icons a#youtube-icon:hover   { color: #FF0000; }
+.social-icons a#x-icon:hover { color: #000000; }
+.social-icons a#kakao-icon:hover     { color: #FEE500; }
+
+
+/* --- Footer Bottom --- */
+.footer-bottom-v2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.footer-legal-links a {
+    color: #888;
+    margin-left: 1.5rem;
+}
+.footer-legal-links a:hover {
+    color: #333;
+}
+
+/* -------------------
+ * 6. Other Pages (Shop, CS, etc.)
+ * ------------------- */
+.page-header {
+    background-color: var(--color-light-gray);
+    padding: 3rem 0;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.shop-header {
+    padding: 4rem 0;
+    background-color: var(--color-light-gray);
+    text-align: center;
+}
+
+.shop-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.shop-nav .nav-link {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.shop-nav .nav-link.active,
+.shop-nav .nav-link:hover {
+    color: var(--color-text);
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+}
+
+.shop-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.product-count {
+    color: var(--color-text-muted);
+}
+
+.sort-options .form-select {
+    width: auto;
+    border-radius: 20px;
+    border-color: var(--color-border);
+}
+.sort-options .form-select:focus {
+    box-shadow: none;
+    border-color: var(--color-text);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.cs-contact-card {
+    background-color: var(--color-light-gray);
+    padding: 2rem;
+    border-radius: 8px;
+    height: 100%;
+}
+.cs-contact-card h5 {
+    font-weight: 600;
+}
+.cs-contact-card .icon-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.cs-contact-card .icon-label i {
+    font-size: 1.5rem;
+    width: 30px;
+}
+.accordion-button:not(.collapsed) {
+    background-color: var(--color-light-gray);
+    color: var(--color-text);
+    box-shadow: none;
+}
+.accordion-item {
+    border-color: var(--color-border);
+}
+
+
+/* -------------------
+ * 7. Product Detail Page
+ * ------------------- */
+.product-detail-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.product-info {
+    padding-left: 2rem;
+}
+
+.product-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+}
+
+.product-description {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-top: 1rem;
+}
+
+.price-section .original-price {
+    font-size: 1.2rem;
+}
+.price-section .sale-price,
+.price-section .main-price {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.quantity-selector {
+    max-width: 100px;
+}
+
+.btn-add-to-cart {
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.product-meta {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
+}
+
+
+/* -------------------
+ * 8. Cart Page
+ * ------------------- */
+.cart-container {
+    min-height: 50vh; /* Ensure footer is pushed down on empty cart */
+}
+
+.cart-items-wrapper {
+    background-color: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.cart-header {
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cart-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.cart-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.cart-item:first-child {
+    padding-top: 0;
+}
+
+.cart-item-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 1.5rem;
+}
+
+.cart-item-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.cart-item-price {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+}
+
+.order-summary {
+    background-color: var(--color-light-gray);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 2rem;
+    position: sticky;
+    top: 100px; /* Adjust based on your header height */
+}
+
+.order-summary h4 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.summary-item, .summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.summary-total {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* -------------------
+ * 9. Story & Sub Pages
+ * ------------------- */
+.page-hero {
+    padding: 6rem 0;
+    background-color: var(--color-light-gray);
+    text-align: center;
+}
+
+.page-hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.page-hero p {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    max-width: 600px;
+    margin: 1rem auto 0;
+}
+
+.content-section {
+    padding: 4rem 0;
+}
+
+
+/* -------------------
+ * Responsive adjustments
+ * ------------------- */
+@media (max-width: 992px) {
+    .footer-top-v2 {
+        text-align: center;
+    }
+    .footer-brand-info {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    .footer-links-container {
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    .footer-col-v2 {
+        text-align: center;
+        min-width: 150px;
+    }
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .footer-top-v2, .footer-links-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+   
+    .footer-bottom-v2 {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .footer-legal-links {
+        margin-top: 1rem;
+    }
+    .footer-legal-links a {
+        margin: 0 0.5rem;
+    }
+    .product-info {
+        padding-left: 0;
+        margin-top: 2rem;
+    }
+}
+

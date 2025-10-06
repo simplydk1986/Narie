@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>Shopping Cart</h1>
+        <p>상품, 수량 및 가격을 확인해주세요.</p>
+    </div>
+</div>
+
+<div class="container cart-container my-5">
+    {% if cart_items %}
+    <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+            <div class="cart-items-wrapper">
+                <div class="cart-header d-none d-md-flex">
+                    <div class="col-md-6">상품 정보</div>
+                    <div class="col-md-2 text-center">수량</div>
+                    <div class="col-md-2 text-center">상품 금액</div>
+                    <div class="col-md-2"></div>
+                </div>
+
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="row align-items-center">
+                        <!-- Product Info -->
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-center">
+                                <a href="{% url 'product_detail' item.product.id %}">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-item-img">
+                                </a>
+                                <div>
+                                    <h5 class="cart-item-title">{{ item.product.name }}</h5>
+                                    <p class="cart-item-price">
+                                        {% if item.product.is_on_sale %}
+                                            ₩{{ item.product.sale_price|floatformat:0 }}
+                                        {% else %}
+                                            ₩{{ item.product.price|floatformat:0 }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Quantity -->
+                        <div class="col-6 col-md-2 text-md-center">
+                            <span class="d-md-none">수량: </span>{{ item.quantity }}
+                        </div>
+                        <!-- Subtotal -->
+                        <div class="col-6 col-md-2 text-md-center">
+                            <span class="d-md-none">금액: </span><strong>₩{{ item.get_total|floatformat:0 }}</strong>
+                        </div>
+                        <!-- Remove Button -->
+                        <div class="col-12 col-md-2 text-end mt-2 mt-md-0">
+                            <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-outline-danger">삭제</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="order-summary">
+                <h4>주문 요약</h4>
+                <div class="summary-item">
+                    <span>상품 합계</span>
+                    <span>₩{{ cart_total|floatformat:0 }}</span>
+                </div>
+                <div class="summary-item">
+                    <span>배송비</span>
+                    <span>무료</span>
+                </div>
+                <hr>
+                <div class="summary-total">
+                    <span>총 결제 금액</span>
+                    <span>₩{{ cart_total|floatformat:0 }}</span>
+                </div>
+                <div class="d-grid mt-4">
+                    <a href="#" class="btn btn-dark btn-lg">결제하기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-cart-x" style="font-size: 5rem; color: #ccc;"></i>
+        <h3 class="mt-4">장바구니가 비어 있습니다.</h3>
+        <p class="text-muted">마음에 드는 상품을 장바구니에 담아보세요!</p>
+        <a href="{% url 'shop' %}" class="btn btn-dark mt-3">쇼핑 계속하기</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

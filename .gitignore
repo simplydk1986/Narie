@@ -1,0 +1,19 @@
+# .gitignore
+
+# Virtualenv
+venv/
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Django generated
+*.log
+__pycache__/
+.DS_Store
+
+# Static files collected
+staticfiles/
+
+# Media files
+media/

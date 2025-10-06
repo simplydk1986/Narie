@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun&Sol</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}"><strong>Sun&Sol</strong></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link" data-menu-id="shop-menu" href="{% url 'shop' %}">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link" data-menu-id="story-menu" href="{% url 'story' %}">Story</a></li>
+                        <li class="nav-item"><a class="nav-link" data-menu-id="cs-menu" href="{% url 'faq' %}">CS Center</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cart' %}">
+                                <i class="bi bi-bag"></i>
+                                {% if cart_item_count > 0 %}
+                                <span class="badge bg-danger rounded-pill position-absolute">{{ cart_item_count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{% url 'order_history' %}">주문 내역</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}">로그아웃</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_login' %}">Log in</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dropdown Panel -->
+        <div class="dropdown-panel">
+            <div class="container">
+                <!-- Shop Menu -->
+                <div id="shop-menu" class="dropdown-content">
+                    <div class="dropdown-columns-wrapper">
+                        <div class="dropdown-column">
+                            <span class="dropdown-title">SHOP</span>
+                            <a href="{% url 'shop' %}" class="dropdown-item-custom">Shop All</a>
+                            <a href="#" class="dropdown-item-custom">Best Sellers</a>
+                            <a href="#" class="dropdown-item-custom">New Arrivals</a>
+                        </div>
+                        <div class="dropdown-column">
+                            <span class="dropdown-title">유형별</span>
+                            {% for type in product_types %}
+                                <a href="?type={{ type.name }}" class="dropdown-item-custom">{{ type.name }}</a>
+                            {% endfor %}
+                        </div>
+                        <div class="dropdown-column">
+                            <span class="dropdown-title">라인별</span>
+                             {% for line in product_lines %}
+                                <a href="?line={{ line.name }}" class="dropdown-item-custom">{{ line.name }}</a>
+                            {% endfor %}
+                        </div>
+                        <div class="dropdown-column">
+                            <span class="dropdown-title">고민별</span>
+                            {% for concern in product_concerns %}
+                                <a href="?concern={{ concern.name }}" class="dropdown-item-custom">{{ concern.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story Menu -->
+                <div id="story-menu" class="dropdown-content">
+                     <div class="dropdown-columns-wrapper">
+                        <div class="dropdown-column">
+                             <a href="{% url 'about' %}" class="dropdown-item-custom">About Us</a>
+                             <a href="{% url 'reviews' %}" class="dropdown-item-custom">Reviews</a>
+                             <a href="{% url 'articles' %}" class="dropdown-item-custom">Articles</a>
+                             <a href="{% url 'suggestions' %}" class="dropdown-item-custom">Suggestions</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CS Center Menu -->
+                 <div id="cs-menu" class="dropdown-content">
+                     <div class="dropdown-columns-wrapper">
+                        <div class="dropdown-column">
+                             <a href="{% url 'notice' %}" class="dropdown-item-custom">NOTICE</a>
+                             <a href="{% url 'faq' %}" class="dropdown-item-custom">FAQ</a>
+                             <a href="{% url 'qna' %}" class="dropdown-item-custom">Q&A</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer-v2">
+        <div class="container">
+            <div class="footer-top-v2">
+                <div class="footer-brand-info">
+                    <a href="#" class="footer-brand">Sun&Sol</a>
+                    <p class="footer-text mt-3">자연의 힘으로 당신의 피부에 건강한 빛을 선사합니다.</p>
+                     <div class="social-icons">
+                        <a href="#" id="instagram-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="#" id="facebook-icon"><i class="bi bi-facebook"></i></a>
+                        <a href="#" id="tiktok-icon"><i class="bi bi-tiktok"></i></a>
+                        <a href="#" id="youtube-icon"><i class="bi bi-youtube"></i></a>
+                        <a href="#" id="x-icon"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" id="kakao-icon"><i class="bi bi-chat-fill"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links-container">
+                    <div class="footer-col-v2 footer-links">
+                        <p class="footer-subtitle">Shop</p>
+                        <ul>
+                            <li><a href="{% url 'shop' %}" class="footer-link">Shop All</a></li>
+                            <li><a href="#" class="footer-link">Best Sellers</a></li>
+                            <li><a href="#" class="footer-link">New Arrivals</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col-v2 footer-links">
+                        <p class="footer-subtitle">About Us</p>
+                         <ul>
+                            <li><a href="{% url 'story' %}" class="footer-link">Story</a></li>
+                            <li><a href="#" class="footer-link">Our Ingredients</a></li>
+                            <li><a href="#" class="footer-link">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col-v2 footer-links">
+                        <p class="footer-subtitle">Support</p>
+                         <ul>
+                            <li><a href="{% url 'faq' %}" class="footer-link">CS Center</a></li>
+                            <li><a href="#" class="footer-link">Shipping & Returns</a></li>
+                            <li><a href="#" class="footer-link">Track Order</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-v2">
+                <p class="mb-0">&copy; 2024 Sun&Sol. All Rights Reserved.</p>
+                <div class="footer-legal-links">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // --- Header Scroll & Dropdown Logic ---
+        const header = document.querySelector('header');
+        const dropdownPanel = document.querySelector('.dropdown-panel');
+        const dropdownLinks = document.querySelectorAll('.nav-link[data-menu-id]');
+        const dropdownContents = document.querySelectorAll('.dropdown-content');
+        let hideTimeout;
+
+        function showPanel() {
+            clearTimeout(hideTimeout);
+            header.classList.add('dropdown-active');
+        }
+
+        function hidePanel() {
+            hideTimeout = setTimeout(() => {
+                header.classList.remove('dropdown-active');
+            }, 200);
+        }
+
+        dropdownLinks.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                showPanel();
+                const menuId = this.getAttribute('data-menu-id');
+                
+                dropdownContents.forEach(content => {
+                    if (content.id === menuId) {
+                        content.style.display = 'block';
+                        const wrapper = content.querySelector('.dropdown-columns-wrapper');
+                        if (wrapper) {
+                            positionDropdown(link, wrapper);
+                        }
+                    } else {
+                        content.style.display = 'none';
+                    }
+                });
+            });
+            link.addEventListener('mouseleave', hidePanel);
+        });
+
+        dropdownPanel.addEventListener('mouseenter', showPanel);
+        dropdownPanel.addEventListener('mouseleave', hidePanel);
+
+        // Function to position the dropdown content
+        function positionDropdown(link, wrapper) {
+            const linkRect = link.getBoundingClientRect();
+            const containerRect = dropdownPanel.querySelector('.container').getBoundingClientRect();
+            
+            // Calculate the center of the link relative to the container
+            const linkCenter = linkRect.left - containerRect.left + (linkRect.width / 2);
+            
+            // Calculate the left position for the wrapper to be centered under the link
+            const wrapperWidth = wrapper.offsetWidth;
+            let newLeft = linkCenter - (wrapperWidth / 2);
+
+            // Boundary checks to ensure it doesn't go off-screen
+            if (newLeft < 0) {
+                newLeft = 15; // Add some padding from the edge
+            }
+            if (newLeft + wrapperWidth > containerRect.width) {
+                newLeft = containerRect.width - wrapperWidth - 15; // Add some padding
+            }
+
+            wrapper.style.left = `${newLeft}px`;
+        }
+
+        // --- Active Menu Link Logic ---
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active-menu-link');
+            }
+        });
+
+        // --- Header Scroll Effect ---
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- Video Player Logic ---
+        const videos = document.querySelectorAll('.video-container video');
+        let currentVideoIndex = 0;
+
+        function playNextVideo() {
+            const currentVideoContainer = videos[currentVideoIndex].parentElement;
+            currentVideoContainer.classList.remove('active');
+
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+
+            const nextVideoContainer = videos[currentVideoIndex].parentElement;
+            nextVideoContainer.classList.add('active');
+            videos[currentVideoIndex].play();
+        }
+
+        if (videos.length > 0) {
+            videos.forEach((video, index) => {
+                video.addEventListener('ended', playNextVideo);
+                if (index > 0) {
+                    video.parentElement.classList.remove('active');
+                }
+            });
+            videos[0].parentElement.classList.add('active');
+            videos[0].play().catch(error => {
+                 console.log("Autoplay was prevented:", error);
+                 // May need a user interaction to start the first video
+            });
+        }
+    });
+    </script>
+</body>
+</html>
+

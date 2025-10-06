@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>Q&A</h1>
+    </div>
+</div>
+
+<div class="container content-section py-5 cs-page-container">
+    <!-- Question Section -->
+    <div class="board-detail-header">
+        <h2 class="board-detail-title">
+            {{ qna.title }}
+            {% if qna.is_private %}<i class="bi bi-lock-fill ms-2"></i>{% endif %}
+        </h2>
+        <div class="board-detail-meta">
+            <span>작성자: {{ qna.author.username }}</span>
+            <span>작성일: {{ qna.created_at|date:"Y-m-d H:i" }}</span>
+            <span>답변상태: {{ qna.status }}</span>
+        </div>
+    </div>
+    <div class="board-detail-content qna-question">
+        {{ qna.content|linebreaksbr }}
+    </div>
+
+    <!-- Answer Section -->
+    {% if qna.answer %}
+    <div class="qna-answer-wrapper">
+        <div class="board-detail-header">
+            <h4 class="board-detail-title">
+                <i class="bi bi-arrow-return-right"></i> 답변
+            </h4>
+            <div class="board-detail-meta">
+                <span>작성자: {{ qna.answer.author.username }}</span>
+                <span>답변일: {{ qna.answer.created_at|date:"Y-m-d H:i" }}</span>
+            </div>
+        </div>
+        <div class="board-detail-content">
+            {{ qna.answer.content|linebreaksbr }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center gap-2 mt-5">
+        <a href="{% url 'qna' %}" class="btn btn-dark px-4">목록으로</a>
+    </div>
+</div>
+{% endblock %}

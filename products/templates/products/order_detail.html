@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}주문 상세 - Sun&Sol{% endblock %}
+
+{% block style %}
+<style>
+    body { background-color: #f9f9f9; }
+    .container { max-width: 800px; margin: 120px auto 50px; padding: 40px; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    .container h1 { font-family: 'Prata', serif; }
+    .order-info, .shipping-info, .items-info { margin-bottom: 30px; }
+    .order-info p, .shipping-info p { margin: 5px 0; }
+    .item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+    .item img { width: 80px; height: 80px; object-fit: cover; margin-right: 15px; }
+    .item-details { flex-grow: 1; }
+    .item-price { text-align: right; }
+    .total-price { text-align: right; font-size: 1.5em; font-weight: bold; margin-top: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Order Details</h1>
+
+    <div class="order-info">
+        <h3>주문 정보</h3>
+        <p><strong>주문 번호:</strong> #{{ order.id }}</p>
+        <p><strong>주문 날짜:</strong> {{ order.created_at|date:"Y-m-d H:i" }}</p>
+    </div>
+
+    <div class="shipping-info">
+        <h3>배송 정보</h3>
+        <p><strong>받는 분:</strong> {{ order.name }}</p>
+        <p><strong>이메일:</strong> {{ order.email }}</p>
+        <p><strong>주소:</strong> {{ order.address }}</p>
+    </div>
+
+    <div class="items-info">
+        <h3>주문 상품</h3>
+        {% for item in order.items.all %}
+            <div class="item">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                <div class="item-details">
+                    <strong>{{ item.product.name }}</strong><br>
+                    <span>{{ item.price }}원 x {{ item.quantity }}개</span>
+                </div>
+                <div class="item-price">
+                    <strong>{{ item.price|multiply:item.quantity }}원</strong>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="total-price">
+            총 합계: {{ total_price }}원
+        </div>
+    </div>
+</div>
+{% endblock %}

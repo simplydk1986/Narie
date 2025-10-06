@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Sun&Sol{% endblock %}
+
+{% block style %}
+<style>
+    body { background-color: #f9f9f9; }
+    .container { max-width: 800px; margin: 120px auto 50px; padding: 40px; background-color: white; }
+    .container h1 { font-family: 'Prata', serif; font-size: 2.5em; text-align: center; margin-bottom: 20px; }
+    img { max-width: 100%; border-radius: 8px; margin-top: 20px; }
+    .price { font-size: 1.5em; color: #e85a70; font-weight: bold; font-family: 'Cormorant Garamond', serif; }
+    .description { font-family: 'Cormorant Garamond', serif; font-size: 1.2em; line-height: 1.8; color: #555; }
+    .add-to-cart-btn { display: block; width: 100%; background-color: #e85a70; color: white; border: none; padding: 15px; font-size: 1.1em; cursor: pointer; border-radius: 5px; margin: 20px 0; }
+
+    /* --- ⭐️ 리뷰 관련 스타일 추가 ⭐️ --- */
+    .rating-section, .reviews-section, .review-form-section { margin-top: 40px; border-top: 1px solid #eee; padding-top: 30px; }
+    .star-rating .fa-star { color: #f8d64e; }
+    .review { border-bottom: 1px solid #eee; padding: 15px 0; }
+    .review p { margin: 5px 0; }
+    .review-form-section textarea, .review-form-section select { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+    .review-form-section button { background-color: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ product.name }}</h1>
+    
+    <div class="rating-section">
+        <span class="star-rating">
+            {% for i in "12345" %}
+                <i class="fa-solid fa-star" {% if forloop.counter > average_rating|floatformat:0 %}style="color:#ddd;"{% endif %}></i>
+            {% endfor %}
+        </span>
+        <span> ({{ reviews.count }}개의 리뷰)</span>
+    </div>
+
+    <hr>
+    {% if product.image %} <img src="{{ product.image.url }}" alt="{{ product.name }}"> {% endif %}
+    <p class="price">{{ product.price }}원</p>
+    <p class="description">{{ product.description|linebreaks }}</p>
+    <form action="{% url 'add_to_cart' product.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="add-to-cart-btn">장바구니 담기</button>
+    </form>
+
+    <div class="review-form-section">
+        <h3>리뷰 남기기</h3>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ review_form.as_p }}
+                <button type="submit">리뷰 제출</button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'login' %}?next={{ request.path }}">로그인</a> 후 리뷰를 작성할 수 있습니다.</p>
+        {% endif %}
+    </div>
+
+    <div class="reviews-section">
+        <h3>사용자 리뷰</h3>
+        {% for review in reviews %}
+            <div class="review">
+                <strong>{{ review.user.username }}</strong>
+                <span class="star-rating">
+                    {% for i in "12345" %}
+                        <i class="fa-solid fa-star" {% if forloop.counter > review.rating %}style="color:#ddd;"{% endif %}></i>
+                    {% endfor %}
+                </span>
+                <p>{{ review.comment }}</p>
+                <small style="color: #888;">{{ review.created_at|date:"Y-m-d" }}</small>
+            </div>
+        {% empty %}
+            <p>아직 작성된 리뷰가 없습니다.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'product_list' %}" style="display:inline-block; margin-top: 20px;">← Shop으로 돌아가기</a>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}주문 완료 - Sun&Sol{% endblock %}
+
+{% block style %}
+<style>
+    body { background-color: #f9f9f9; }
+    .container { max-width: 600px; margin: 120px auto 50px; padding: 40px; background-color: white; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    .container h1 { font-family: 'Prata', serif; }
+    .container p { line-height: 1.8; }
+    .shop-link { display: inline-block; background-color: #e85a70; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-size: 1.1em; margin-top: 20px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>주문해주셔서 감사합니다!</h1>
+    <p>주문이 성공적으로 접수되었습니다.</p>
+    <p>주문 번호: <strong>{{ order.id }}</strong></p>
+    <p>곧 주문 확인 이메일을 보내드리겠습니다.</p>
+    <a href="{% url 'product_list' %}" class="shop-link">계속 쇼핑하기</a>
+</div>
+{% endblock %}

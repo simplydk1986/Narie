@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>Notice</h1>
+    </div>
+</div>
+
+<div class="container content-section py-5 cs-page-container">
+    <div class="board-detail-header">
+        <h2 class="board-detail-title">{{ notice.title }}</h2>
+        <div class="board-detail-meta">
+            <span>작성자: {{ notice.author.username }}</span>
+            <span>작성일: {{ notice.created_at|date:"Y-m-d H:i" }}</span>
+        </div>
+    </div>
+    <div class="board-detail-content">
+        {{ notice.content|linebreaksbr }}
+    </div>
+    <div class="d-flex justify-content-center gap-2 mt-5">
+        <a href="{% url 'notice' %}" class="btn btn-dark px-4">목록으로</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header-v2">
+    <div class="container">
+        <h1>공지사항 작성</h1>
+        <p>새로운 소식을 등록합니다.</p>
+    </div>
+</div>
+
+<div class="container content-section py-5 cs-page-container">
+    <div class="qna-form-wrapper">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.title.id_for_label }}" class="form-label">제목</label>
+                {{ form.title }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.content.id_for_label }}" class="form-label">내용</label>
+                {{ form.content }}
+            </div>
+            <div class="d-flex justify-content-center gap-2">
+                <button type="submit" class="btn btn-dark px-4">작성완료</button>
+                <a href="{% url 'notice' %}" class="btn btn-outline-secondary px-4">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
